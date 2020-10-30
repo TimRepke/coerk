@@ -7,7 +7,7 @@
     <meta name="description" content="Gallery of collages by Coerk.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#317EFB" />
-    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -181,7 +181,7 @@
 </div>
 
 <div id="viewer">
-    <img src="" alt="" />
+    <div id="viewer-img"></div>
     <button class="close">X</button>
     <button class="prev">&blacktriangleleft;</button>
     <button class="next">&blacktriangleright;</button>
@@ -205,14 +205,16 @@
         // Safari compatible way of converting HTMLCollection to array
         var images = Array.prototype.slice.call((new DOMParser()).parseFromString(gallery.innerText, 'text/html').body.children);
 
-        images.reverse().forEach(function(img, i) {
+        images.reverse().forEach(function (img, i) {
             img.setAttribute('data-src-full', img.src.slice(0, -10));
             img.setAttribute('data-src', img.src);
             img.src = img.src.slice(0, -10) + '.pre.jpg';
             img.style.background = '#423427';
             //gallery.after(img);
-			gallery.parentNode.insertBefore(img, gallery.nextSibling);
-            img.onclick = function(){ updateViewer(images.length - i - 1);};
+            gallery.parentNode.insertBefore(img, gallery.nextSibling);
+            img.onclick = function () {
+                updateViewer(images.length - i - 1);
+            };
         });
         images = document.querySelectorAll('#gallery > img')
 
@@ -248,29 +250,33 @@
         window.addEventListener("orientationChange", lazyload);
 
         var viewer = document.getElementById('viewer');
-        var viewerImg = document.querySelector('#viewer img');
+        var viewerImg = document.querySelector('#viewer-img');
         var viewerNext = document.querySelector('#viewer .next');
         var viewerPrev = document.querySelector('#viewer .prev');
 
         var viewerClose = document.querySelector('#viewer .close');
-        viewerClose.onclick = function() { viewer.style.display = 'none'; };
-        viewer.onclick = function() { viewer.style.display = 'none'; };
+        viewerClose.onclick = function () {
+            viewer.style.display = 'none';
+        };
+        viewer.onclick = function () {
+            viewer.style.display = 'none';
+        };
 
         function updateViewer(i) {
             viewer.style.display = 'block';
 
             var prevI = ((images.length) + (i - 1)) % images.length;
             var nextI = (i + 1) % images.length;
-            viewerPrev.onclick = function(e) {
+            viewerPrev.onclick = function (e) {
                 e.stopPropagation();
                 updateViewer(prevI);
             }
-            viewerNext.onclick = function(e) {
+            viewerNext.onclick = function (e) {
                 e.stopPropagation();
                 updateViewer(nextI);
             }
             //viewerImg.setAttribute('src', images[i].getAttribute('data-src-full'));
-            viewerImg.style.backgroundImage = images[i].getAttribute('data-src-full');
+            viewerImg.style.backgroundImage = 'url("' + images[i].getAttribute('data-src-full') + '")';
         }
     });
 </script>

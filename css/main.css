@@ -137,27 +137,22 @@ footer > a:hover, footer > a:active, footer > a:focus {
 
 #viewer {
     display: none;
-    backdrop-filter: blur(20px);
     position: fixed;
     top: 0;
     height: 100vh;
     width: 100vw;
     text-align: center;
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 @supports (backdrop-filter: none) {
     #viewer {
         backdrop-filter: blur(20px);
+        background-color: transparent;
     }
 }
 
-@supports not (backdrop-filter: none) {
-    #viewer {
-        background-color: rgba(0, 0, 0, 0.9);
-    }
-}
-
-#viewer > img {
+#viewer-img {
     height: 95vh;
     width: 90vw;
     margin-top: 2.5vh;
