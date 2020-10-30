@@ -1,5 +1,4 @@
 
-
 html {
     color: rgb(34, 34, 34);
     font-size: 1em;
@@ -43,6 +42,7 @@ logo {
     margin-left: 0.2em;
     margin-bottom: 0.2em;
     margin-right: -2em;
+    height: 2em;
     display: block;
     background: rgba(34, 34, 34, 0.8);
     padding: 0.5em;
@@ -70,7 +70,7 @@ logo {
     transform: translate(2em, 0px);
 }
 
-#gallery  img {
+#gallery img {
     width: 100%;
     margin-left: -4pt;
     margin-top: 1em;
@@ -82,7 +82,7 @@ logo {
     border-radius: 2pt;
 }
 
-#gallery  img:first-of-type {
+#gallery img:first-of-type {
     margin-top: 0;
 }
 
@@ -139,18 +139,33 @@ footer > a:hover, footer > a:active, footer > a:focus {
     display: none;
     backdrop-filter: blur(20px);
     position: fixed;
-    top: 0px;
+    top: 0;
     height: 100vh;
     width: 100vw;
     text-align: center;
 }
 
+@supports (backdrop-filter: none) {
+    #viewer {
+        backdrop-filter: blur(20px);
+    }
+}
+
+@supports not (backdrop-filter: none) {
+    #viewer {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+}
+
 #viewer > img {
     height: 95vh;
     width: 90vw;
-    object-fit: contain;
     margin-top: 2.5vh;
     position: relative;
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+    background-position-y: 50%;
+    background-size: contain;
 }
 
 #viewer .close {
@@ -202,6 +217,28 @@ footer > a:hover, footer > a:active, footer > a:focus {
     #socials a {
         display: inline-block;
         margin: 0px 0.2em 1em;
+        padding: 0.5em;
+    }
+
+    #socials > a:hover {
+        margin-right: inherit;
+    }
+
+    #socials > a:hover > svg {
+        transform: none;
+    }
+}
+
+@media (any-hover: none) {
+    #socials {
+        position: relative;
+        top: 0;
+        text-align: center;
+    }
+
+    #socials a {
+        display: inline-block;
+        margin: 0 0.2em 1em;
         padding: 0.5em;
     }
 

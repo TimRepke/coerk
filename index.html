@@ -3,14 +3,16 @@
 
 <head>
     <meta charset="utf-8">
-    <title>COERKs Internetpräsenz</title>
+    <title>Coerk Collages</title>
     <meta name="description" content="Gallery of collages by Coerk.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#317EFB" />
-
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-
 </head>
 
 <body>
@@ -45,7 +47,7 @@
                 </g>
             </svg>
         </a>
-        <a href="https://de-de.facebook.com/coerk/" rel="noreferrer" target="_blank">
+        <!--<a href="https://de-de.facebook.com/coerk/" rel="noreferrer" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                  x="0px" y="0px"
                  viewBox="0 0 29.94 29.94" style="enable-background:new 0 0 29.94 29.94;" xml:space="preserve">
@@ -57,7 +59,7 @@
                         c1.188,0,2.116,0.396,3.254,0.715L20.125,9.167z" />
                 </g>
             </svg>
-        </a>
+        </a>-->
         <a href="mailto:coerk@info.de">
             <svg xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -111,7 +113,7 @@
 
 <footer>
     <a href="https://www.instagram.com/coerk/" target="_blank" rel="noreferrer">Instagram</a> •
-    <a href="https://de-de.facebook.com/coerk/" target="_blank" rel="noreferrer">Facebook</a> •
+    <!--a href="https://de-de.facebook.com/coerk/" target="_blank" rel="noreferrer">Facebook</a> •-->
     <a href="#impressum" onclick="impressum()">Impressum</a>
 </footer>
 <!-- https://de-de.facebook.com/coerk/ -->
@@ -186,7 +188,7 @@
 </div>
 
 <script type="application/javascript">
-    let impressumElem = document.getElementById("impressum");
+    var impressumElem = document.getElementById("impressum");
 
     function impressum() {
         if (impressumElem.style.display === 'none') {
@@ -198,24 +200,27 @@
 
     document.addEventListener("DOMContentLoaded", function () {
 
-        const gallery = document.querySelector('#gallery > noscript');
-        let images = [...new DOMParser().parseFromString(gallery.innerHTML, 'text/html').body.children];
+        var gallery = document.querySelector('#gallery > noscript');
 
-        images.reverse().forEach((img, i) => {
+        // Safari compatible way of converting HTMLCollection to array
+        var images = Array.prototype.slice.call((new DOMParser()).parseFromString(gallery.innerText, 'text/html').body.children);
+
+        images.reverse().forEach(function(img, i) {
             img.setAttribute('data-src-full', img.src.slice(0, -10));
             img.setAttribute('data-src', img.src);
             img.src = img.src.slice(0, -10) + '.pre.jpg';
             img.style.background = '#423427';
-            gallery.after(img);
-            img.onclick = () => updateViewer(images.length - i - 1)
+            //gallery.after(img);
+			gallery.parentNode.insertBefore(img, gallery.nextSibling);
+            img.onclick = function(){ updateViewer(images.length - i - 1);};
         });
         images = document.querySelectorAll('#gallery > img')
 
         images[0].src = images[0].getAttribute('data-src');
         images[0].style.height = '';
 
-        const lazyLoadImages = [...images].slice(1);
-        let lazyLoadThrottleTimeout;
+        var lazyLoadImages = Array.prototype.slice.call(images).slice(1);
+        var lazyLoadThrottleTimeout;
 
         function lazyload() {
             if (lazyLoadThrottleTimeout) {
@@ -223,7 +228,7 @@
             }
 
             lazyLoadThrottleTimeout = setTimeout(function () {
-                const scrollTop = window.pageYOffset;
+                var scrollTop = window.pageYOffset;
                 lazyLoadImages.forEach(function (img) {
                     if (img.offsetTop < (window.innerHeight + scrollTop + 500)) {
                         img.src = img.dataset.src;
@@ -242,29 +247,30 @@
         window.addEventListener("resize", lazyload);
         window.addEventListener("orientationChange", lazyload);
 
-        const viewer = document.getElementById('viewer');
-        const viewerImg = document.querySelector('#viewer img');
-        const viewerNext = document.querySelector('#viewer .next');
-        const viewerPrev = document.querySelector('#viewer .prev');
+        var viewer = document.getElementById('viewer');
+        var viewerImg = document.querySelector('#viewer img');
+        var viewerNext = document.querySelector('#viewer .next');
+        var viewerPrev = document.querySelector('#viewer .prev');
 
-        const viewerClose = document.querySelector('#viewer .close');
-        viewerClose.onclick = () => viewer.style.display = 'none';
-        viewer.onclick = () => viewer.style.display = 'none';
+        var viewerClose = document.querySelector('#viewer .close');
+        viewerClose.onclick = function() { viewer.style.display = 'none'; };
+        viewer.onclick = function() { viewer.style.display = 'none'; };
 
         function updateViewer(i) {
             viewer.style.display = 'block';
 
-            const prevI = ((images.length) + (i - 1)) % images.length;
-            const nextI = (i + 1) % images.length;
-            viewerPrev.onclick = (e) => {
+            var prevI = ((images.length) + (i - 1)) % images.length;
+            var nextI = (i + 1) % images.length;
+            viewerPrev.onclick = function(e) {
                 e.stopPropagation();
                 updateViewer(prevI);
             }
-            viewerNext.onclick = (e) => {
+            viewerNext.onclick = function(e) {
                 e.stopPropagation();
                 updateViewer(nextI);
             }
-            viewerImg.setAttribute('src', images[i].getAttribute('data-src-full'));
+            //viewerImg.setAttribute('src', images[i].getAttribute('data-src-full'));
+            viewerImg.style.backgroundImage = images[i].getAttribute('data-src-full');
         }
     });
 </script>
